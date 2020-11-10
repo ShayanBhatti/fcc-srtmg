@@ -1,5 +1,7 @@
 **freeCodeCamp** - Information Security 5: Secure Real Time Multiplayer Game
 
+[![Run on Repl.it](https://repl.it/badge/github/pinglu85/fcc-secure-real-time-multiplayer-game)](https://repl.it/github/pinglu85/fcc-secure-real-time-multiplayer-game)
+
 Develop a 2D real time multiplayer game using the HTML Canvas API and [Socket.io](https://socket.io/). The game can be as simple or complex as you like, as long as all the following user stories are implemented:
 
 1. Multiple players can connect to a server and play.
