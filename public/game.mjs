@@ -15,6 +15,7 @@ let player;
 let playerRank = 'Rank:   /  ';
 const currentOpponents = [];
 let currentCollectible;
+let isEmittingCollision = false;
 
 // Pre-load sprites
 const loadSprite = (src) => {
@@ -44,6 +45,10 @@ socket.on('collectible', (collectible) => {
   if (currentCollectible) {
     // ...update its state
     currentCollectible.setState(collectible);
+    // Reset the isEmittingCollision to false, so we
+    // can notify server when player collides with the
+    // new collectible item
+    isEmittingCollision = false;
   }
   // Otherwise instantiate a new collectible item object
   else {
@@ -147,9 +152,11 @@ function renderGame() {
 
   // Check collision between player's avatar and collectible item
   if (player && currentCollectible) {
-    // If they collide, notify server
-    if (player.collision(currentCollectible)) {
+    // If they collide, notify server once
+    if (player.collision(currentCollectible) && !isEmittingCollision) {
       socket.emit('playerCollideWithCollectible', player);
+      // We already notified server, so we don't need to notify again
+      isEmittingCollision = true;
     }
   }
 
