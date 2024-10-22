@@ -23,17 +23,15 @@ const runner = require('./test-runner.js');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+app.use(helmet.noSniff());
+app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable this if causing conflicts
+  noSniff: true,
+  hidePoweredBy: { setTo: 'PHP 7.4.3' },
+}));
 
-app.use(
-  helmet({
-    noSniff: true,
-    xssFilter: true,
-    hidePoweredBy: {
-      setTo: 'PHP 7.4.3',
-    },
-  })
-);
-app.use(nocache());
+app.use(helmet.noCache());
 
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/assets', express.static(process.cwd() + '/assets'));
