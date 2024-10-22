@@ -184,7 +184,7 @@ server.listen(portNum, () => {
         console.log('Tests are not valid:');
         console.error(error);
       }
-    }, 1500);
+    },5000);
   }
 });
 
