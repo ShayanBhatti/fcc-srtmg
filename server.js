@@ -18,6 +18,14 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+
+// Serving static files
+app.use('/public', express.static(process.cwd() + '/public'));
+app.use('/assets', express.static(process.cwd() + '/assets'));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // Async Helmet setup (simulated)
 const setupHelmet = async () => {
   try {
@@ -71,13 +79,6 @@ const setupHelmet = async () => {
 
 // Call async Helmet setup
 setupHelmet();
-
-// Serving static files
-app.use('/public', express.static(process.cwd() + '/public'));
-app.use('/assets', express.static(process.cwd() + '/assets'));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Index page (static HTML)
 app.route('/').get(function (req, res) {
