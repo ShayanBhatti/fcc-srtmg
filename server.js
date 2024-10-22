@@ -23,15 +23,29 @@ const runner = require('./test-runner.js');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+// Prevent the client from trying to guess/sniff the MIME type (Test 16)
 app.use(helmet.noSniff());
-app.use(helmet());
-app.use(helmet({
-  contentSecurityPolicy: false, // Disable this if causing conflicts
-  noSniff: true,
-  hidePoweredBy: { setTo: 'PHP 7.4.3' },
-}));
 
-app.use(helmet.noCache());
+// Prevent cross-site scripting (XSS) attacks (Test 17)
+app.use(helmet()); // helmet by default includes XSS protection
+
+// Ensure nothing from the website is cached in the client (Test 18)
+// Helmet deprecated noCache(), so manually set headers to prevent caching
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+  next();
+});
+
+// Hide "PHP 7.4.3" in the headers (Test 19)
+app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
+
+// Example route to test the setup
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
 
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/assets', express.static(process.cwd() + '/assets'));
