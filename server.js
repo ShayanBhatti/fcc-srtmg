@@ -74,6 +74,15 @@ const setupHelmet = async () => {
     console.error("Error setting up Helmet security headers:", error);
   }
 };
+const startApp = async () => {
+  await setupHelmet();  // Wait for helmet setup to complete
+  // server.listen(portNum, () => {
+  //   console.log(`Server listening on port ${portNum}`);
+ // });
+ };
+
+startApp().catch(err => console.error(err));
+
 // Call async Helmet setup
 setupHelmet();
 // Index page (static HTML)
