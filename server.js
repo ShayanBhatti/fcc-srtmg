@@ -47,7 +47,7 @@ const setupHelmet = async () => {
     //   maxAge: 30,
     // }));
     app.use(helmet.frameguard({ action: 'deny' }));
-    app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
+    app.use(helmet.hidePoweredBy());
     app.use(helmet.hsts({
       maxAge: 31536000, // 1 year in seconds
       includeSubDomains: true,
@@ -58,6 +58,7 @@ const setupHelmet = async () => {
     app.use(helmet.permittedCrossDomainPolicies({
       permittedPolicies: 'none',
     }));
+    app.use(helmet.xssFilter());
     app.use(helmet.referrerPolicy({ policy: 'no-referrer' }));
 
     // Set up Cache control headers
