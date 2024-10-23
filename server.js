@@ -24,8 +24,7 @@ app.use('/assets', express.static(process.cwd() + '/assets'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const setupHelmet = () => {
-  // Prevent MIME type sniffing
+ // Prevent MIME type sniffing
   app.use(helmet.noSniff());
 
   // Prevent XSS attacks using the X-XSS-Protection header (as per Helmet 3.21.3)
@@ -44,10 +43,7 @@ const setupHelmet = () => {
   app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
 
   console.log("Helmet security headers set up successfully.");
-};
 
-// Call the function to set up Helmet headers
-setupHelmet();
 
 // Index page (static HTML)
 app.route('/').get(function (req, res) {
