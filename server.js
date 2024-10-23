@@ -3,9 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const socketio = require('socket.io');
-const helmet = require('helmet');
-const nanoid = require('nanoid').nanoid;
 
+const nanoid = require('nanoid').nanoid;
+const helmet = require('helmet');
 // Importing utils and modules
 const { playerJoin, getPlayers, playerLeave, setPlayerState } = require('./utils/players');
 import Collectible from './public/Collectible.mjs';
@@ -17,8 +17,6 @@ const runner = require('./test-runner.js');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-
-
 // Serving static files
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/assets', express.static(process.cwd() + '/assets'));
@@ -76,10 +74,8 @@ const setupHelmet = async () => {
     console.error("Error setting up Helmet security headers:", error);
   }
 };
-
 // Call async Helmet setup
 setupHelmet();
-
 // Index page (static HTML)
 app.route('/').get(function (req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
