@@ -4,8 +4,8 @@
   "description": "Information Security 5: Secure Real-Time Multiplayer Game",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --exec babel-node server.js",
-    "test": "PORT=3005 mocha --require @babel/register --recursive --exit --ui tdd tests/"
+    "start": "nodemon --exec ./node_modules/.bin/babel-node server.js"
+    ,    "test": "PORT=3005 mocha --require @babel/register --recursive --exit --ui tdd tests/"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

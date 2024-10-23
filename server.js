@@ -44,10 +44,10 @@ const setupHelmet = async () => {
     app.use(helmet.crossOriginOpenerPolicy());
     app.use(helmet.crossOriginResourcePolicy({ policy: "same-origin" }));
     app.use(helmet.dnsPrefetchControl({ allow: false }));
-    app.use(helmet.expectCt({
-      enforce: true,
-      maxAge: 30,
-    }));
+    // app.use(helmet.expectCt({
+    //   enforce: true,
+    //   maxAge: 30,
+    // }));
     app.use(helmet.frameguard({ action: 'deny' }));
     app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
     app.use(helmet.hsts({
