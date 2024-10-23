@@ -91,7 +91,7 @@ function testFilter(tests, type, n) {
       out = tests.filter(t => t.context.match('Unit Tests'));
       break;
     case 'functional':
-      out = tests.filter(t => t.context.match('Functional Tests') || !t.title.match('#example'));
+      out = tests.filter(t => t.context.match('Functional Tests') && !t.title.match('#example'));
       break;
     default:
       out = tests;
