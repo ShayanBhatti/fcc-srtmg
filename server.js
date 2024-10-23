@@ -27,41 +27,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Async Helmet setup (simulated)
 const setupHelmet = async () => {
   try {
-    // Example of an async operation if fetching a remote policy was needed
-    // await fetchSecurityPolicy();  // Example async function if needed
+    // Prevent MIME type sniffing (Test 16)
+    app.use(helmet.noSniff());
 
+    // Prevent XSS attacks (Test 17)
     app.use(helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "trustedscripts.com"],
-        objectSrc: ["'none'"],
-        upgradeInsecureRequests: [],
+        scriptSrc: ["'self'", "trustedscripts.com"], // Adjust according to your allowed sources
+        objectSrc: ["'none'"], // Block object embedding
+        upgradeInsecureRequests: [], // Enforce secure connections
       },
     }));
-    app.use(helmet.crossOriginEmbedderPolicy());
-    app.use(helmet.crossOriginOpenerPolicy());
-    app.use(helmet.crossOriginResourcePolicy({ policy: "same-origin" }));
-    app.use(helmet.dnsPrefetchControl({ allow: false }));
-    // app.use(helmet.expectCt({
-    //   enforce: true,
-    //   maxAge: 30,
-    // }));
-    app.use(helmet.frameguard({ action: 'deny' }));
-    app.use(helmet.hidePoweredBy());
-    app.use(helmet.hsts({
-      maxAge: 31536000, // 1 year in seconds
-      includeSubDomains: true,
-    }));
-    app.use(helmet.ieNoOpen());
-    app.use(helmet.noSniff());
-    app.use(helmet.originAgentCluster());
-    app.use(helmet.permittedCrossDomainPolicies({
-      permittedPolicies: 'none',
-    }));
-    app.use(helmet.xssFilter());
-    app.use(helmet.referrerPolicy({ policy: 'no-referrer' }));
 
-    // Set up Cache control headers
+    // Prevent caching (Test 18)
     app.use((req, res, next) => {
       res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       res.setHeader('Pragma', 'no-cache');
@@ -70,11 +49,17 @@ const setupHelmet = async () => {
       next();
     });
 
+    // Spoof the X-Powered-By header (Test 19)
+    app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
+
     console.log("Helmet security headers set up successfully.");
   } catch (error) {
     console.error("Error setting up Helmet security headers:", error);
   }
 };
+
+// Call async Helmet setup before starting the app
+setupHelmet();
 const startApp = async () => {
   await setupHelmet();  // Wait for helmet setup to complete
   // server.listen(portNum, () => {
