@@ -24,53 +24,31 @@ app.use('/assets', express.static(process.cwd() + '/assets'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Async Helmet setup (simulated)
-const setupHelmet = async () => {
-  try {
-    // Prevent MIME type sniffing (Test 16)
-    app.use(helmet.noSniff());
+const setupHelmet = () => {
+  // Prevent MIME type sniffing
+  app.use(helmet.noSniff());
 
-    // Prevent XSS attacks (Test 17)
-    app.use(helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "trustedscripts.com"], // Adjust according to your allowed sources
-        objectSrc: ["'none'"], // Block object embedding
-        upgradeInsecureRequests: [], // Enforce secure connections
-      },
-    }));
+  // Prevent XSS attacks using the X-XSS-Protection header (as per Helmet 3.21.3)
+  app.use(helmet.xssFilter());
 
-    // Prevent caching (Test 18)
-    app.use((req, res, next) => {
-      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', '0');
-      res.setHeader('Surrogate-Control', 'no-store');
-      next();
-    });
+  // Set cache-control headers manually to prevent caching
+  app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Surrogate-Control', 'no-store');
+    next();
+  });
 
-    // Spoof the X-Powered-By header (Test 19)
-    app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
+  // Spoof the X-Powered-By header to say "PHP 7.4.3"
+  app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' }));
 
-    console.log("Helmet security headers set up successfully.");
-  } catch (error) {
-    console.error("Error setting up Helmet security headers:", error);
-  }
+  console.log("Helmet security headers set up successfully.");
 };
 
-// Call async Helmet setup before starting the app
+// Call the function to set up Helmet headers
 setupHelmet();
-const startApp = async () => {
-  await setupHelmet();  // Wait for helmet setup to complete
-  // server.listen(portNum, () => {
-  //   console.log(`Server listening on port ${portNum}`);
- // });
- };
 
-startApp().catch(err => console.error(err));
-
-// Call async Helmet setup
-setupHelmet();
 // Index page (static HTML)
 app.route('/').get(function (req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
