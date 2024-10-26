@@ -147,6 +147,7 @@ io.on('connection', (socket) => {
 });
 
 const portNum = parseInt(process.env.PORT, 10) || 3000;
+
 // Set up server and tests
 server.listen(portNum, () => {
   console.log(`Listening on port ${portNum}`);
