@@ -27,7 +27,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
  // Prevent MIME type sniffing
   app.use(helmet.noSniff());
-
+  app.use(
+    helmet({
+      xContentTypeOptions: false,
+    })
+  );
   // Prevent XSS attacks using the X-XSS-Protection header (as per Helmet 3.21.3)
   app.use(helmet.xssFilter());
 
