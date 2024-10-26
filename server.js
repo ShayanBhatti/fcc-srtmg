@@ -6,6 +6,7 @@ const socketio = require('socket.io');
 
 const nanoid = require('nanoid').nanoid;
 const helmet = require('helmet');
+app.use(helmet());
 // Importing utils and modules
 const { playerJoin, getPlayers, playerLeave, setPlayerState } = require('./utils/players');
 import Collectible from './public/Collectible.mjs';
