@@ -6,7 +6,6 @@ const socketio = require('socket.io');
 
 const nanoid = require('nanoid').nanoid;
 const helmet = require('helmet');
-app.use(helmet());
 // Importing utils and modules
 const { playerJoin, getPlayers, playerLeave, setPlayerState } = require('./utils/players');
 import Collectible from './public/Collectible.mjs';
@@ -21,6 +20,7 @@ const io = socketio(server);
 // Serving static files
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/assets', express.static(process.cwd() + '/assets'));
+app.use(helmet());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,7 +34,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
   );
   // Prevent XSS attacks using the X-XSS-Protection header (as per Helmet 3.21.3)
   app.use(helmet.xssFilter());
-
+  app.disable("x-powered-by");
+  app.use(
+    helmet({
+      xPoweredBy: false,
+    })
+  );
   // Set cache-control headers manually to prevent caching
   app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
