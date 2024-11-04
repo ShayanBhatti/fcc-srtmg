@@ -4,7 +4,6 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,macos,dotenv,node
 
 ### dotenv ###
-.env
 
 ### macOS ###
 # General
@@ -105,10 +104,6 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
-
- dotenv environment variables file
-.env.test
-.env*.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
