@@ -19,10 +19,15 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 // Setting security headers with Helmet
-app.use(helmet());
-app.use(helmet.noSniff());  // Prevent MIME type sniffing
-app.use(helmet.xssFilter()); // XSS protection
-app.use(helmet.hidePoweredBy({ setTo: 'PHP 7.4.3' })); // Spoof X-Powered-By header
+app.use(helmet()); // Use Helmet to set some default security headers
+
+// Custom middleware to set specific security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff'); // Prevent MIME type sniffing
+  res.setHeader('X-XSS-Protection', '1; mode=block'); // Enable XSS protection
+  res.setHeader('X-Powered-By', 'PHP 7.4.3'); // Spoof X-Powered-By header
+  next();
+});
 
 // Disable caching
 app.use((req, res, next) => {
@@ -33,8 +38,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve static files
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/assets', express.static(process.cwd() + '/assets'));
+
+// Body parser setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
